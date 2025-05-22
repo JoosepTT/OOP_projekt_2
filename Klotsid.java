@@ -2,30 +2,33 @@ package com.example.oop_rt2;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import java.util.ArrayList;
 
 public class Klotsid {
-
     public Plokk[] a = new Plokk[4];
     public Plokk[] b = new Plokk[4];
+    protected boolean mängija1;
     int langemisLuger = 0;
-    public int suund = 1; // igal plokil on 4 orientatsiooni (1/2/3/4)
+    public int suund = 1;
     boolean vasakPõrge, paremPõrge, põhjaPõrge;
     public boolean aktiivne = true;
     public boolean mitteaktiivne;
     int mitteaktiivseteLuger = 0;
 
-    public void looKujund(Color värv) {
-        //
-        a[0] = new Plokk(värv);
-        a[1] = new Plokk(värv);
-        a[2] = new Plokk(värv);
-        a[3] = new Plokk(värv);
+    public Klotsid(boolean mängija1) {
+        this.mängija1 = mängija1;
+        looKujund(mängijaVärv());
+    }
 
-        //
-        b[0] = new Plokk(värv);
-        b[1] = new Plokk(värv);
-        b[2] = new Plokk(värv);
-        b[3] = new Plokk(värv);
+    protected Color mängijaVärv() {
+        return mängija1 ? Color.ORANGE : Color.CYAN;
+    }
+
+    public void looKujund(Color värv) {
+        for (int i = 0; i < 4; i++) {
+            a[i] = new Plokk(värv);
+            b[i] = new Plokk(värv);
+        }
     }
 
     public void määraXY(int x, int y) {
@@ -34,8 +37,7 @@ public class Klotsid {
 
     public void uuendaXY(int suund) {
 
-        kontrolliPöördePõrget();
-        if (vasakPõrge == false && paremPõrge == false && põhjaPõrge == false) {
+        if (!vasakPõrge && !paremPõrge && !põhjaPõrge) {
             this.suund = suund;
             // klotse saab keerata alles siis, kui parasjagu ühtegi põrget ei toimu
             a[0].x = b[0].x;
@@ -53,156 +55,86 @@ public class Klotsid {
     public void getSuund1() {
 
     }
+
     public void getSuund2() {
 
     }
+
     public void getSuund3() {
 
     }
+
     public void getSuund4() {
 
     }
 
-    public void kontrolliLiikumisPõrget() {
+    public void kontrolliLiikumisPõrget(ArrayList<Plokk> staatilisedPlokid, int vasak_x, int parem_x, int alumine_y) {
         vasakPõrge = false;
         paremPõrge = false;
         põhjaPõrge = false;
 
-        // kokkupõrge staatiliste plokkidega
-        kontrolliStaatilistepõrget();
-
-        // kokkupõrke kontroll
-        // vasak sein
-        for (int i = 0; i < a.length; i++) {
-            if (a[i].x == Mänguhaldur.vasak_x) {
+        // Seina kokkupõrge
+        for (Plokk plokk : a) {
+            if (plokk.x <= vasak_x) {
                 vasakPõrge = true;
             }
-        }
-        // parem sein
-        for (int i = 0; i < a.length; i++) {
-            if (a[i].x + Plokk.plokiSuurus == Mänguhaldur.parem_x) {
+            if (plokk.x + Plokk.plokiSuurus >= parem_x) {
                 paremPõrge = true;
             }
-        }
-        // põhi
-        for (int i = 0; i < a.length; i++) {
-            if (a[i].y + Plokk.plokiSuurus == Mänguhaldur.alumine_y) {
+            if (plokk.y + Plokk.plokiSuurus >= alumine_y) {
                 põhjaPõrge = true;
             }
         }
-    }
 
-    // laias laastus sama mis liikumispõrke puhul
-    public void kontrolliPöördePõrget() {
-        vasakPõrge = false;
-        paremPõrge = false;
-        põhjaPõrge = false;
-
-        // kokkupõrge staatiliste plokkidega
-        kontrolliStaatilistepõrget();
-
-        // kokkupõrke kontroll
-        // vasak sein
-        for (int i = 0; i < a.length; i++) {
-            if (b[i].x < Mänguhaldur.vasak_x) {
-                vasakPõrge = true;
-            }
-        }
-        // parem sein
-        for (int i = 0; i < a.length; i++) {
-            if (b[i].x + Plokk.plokiSuurus > Mänguhaldur.parem_x) {
-                vasakPõrge = true;
-            }
-        }
-        // põhi
-        for (int i = 0; i < a.length; i++) {
-            if (b[i].y + Plokk.plokiSuurus > Mänguhaldur.alumine_y) {
-                põhjaPõrge = true;
-            }
-        }
-    }
-
-    private void kontrolliStaatilistepõrget() {
-
-        for (int i = 0; i < Mänguhaldur.staatilisedPlokid.size(); i++) {
-            int sihtmärk_x = Mänguhaldur.staatilisedPlokid.get(i).x;
-            int sihtmärk_y = Mänguhaldur.staatilisedPlokid.get(i).y;
-
-            // alumise osa kontroll
-            for (int j = 0; j < a.length; j++) {
-                if (a[j].y + Plokk.plokiSuurus == sihtmärk_y && a[j].x == sihtmärk_x) {
+        // Staatilise klotsi kokkupõrge
+        for (Plokk staatilineKlots : staatilisedPlokid) {
+            for (Plokk liikuvKlots : a) {
+                if (liikuvKlots.x == staatilineKlots.x && liikuvKlots.y + Plokk.plokiSuurus == staatilineKlots.y) {
                     põhjaPõrge = true;
-                }
-            }
-
-            // vasaku poole kontroll
-            for (int j = 0; j < a.length; j++) {
-                if (a[j].y + Plokk.plokiSuurus == sihtmärk_y && a[j].x == sihtmärk_x) {
-                    vasakPõrge = true;
-                }
-            }
-
-            // parema poole kontroll
-            for (int j = 0; j < a.length; j++) {
-                if (a[j].y + Plokk.plokiSuurus == sihtmärk_y && a[j].x == sihtmärk_x) {
-                    paremPõrge = true;
                 }
             }
         }
     }
 
     public void uuenda() {
-
         if (mitteaktiivne) {
             mitteaktiivne();
         }
 
-        if (Klahvihaldur.klahv_üles) {
-            switch (suund) {
-                case 1: getSuund2(); break;
-                case 2: getSuund3(); break;
-                case 3: getSuund4(); break;
-                case 4: getSuund1(); break;
-            }
-            Klahvihaldur.klahv_üles = false;
+        // Pööra
+        if ((mängija1 && Klahvihaldur.klahv_üles) || (!mängija1 && Klahvihaldur.klahv_üles2)) {
+            pööra();
+            if (mängija1) Klahvihaldur.klahv_üles = false;
+            else Klahvihaldur.klahv_üles2 = false;
         }
 
-        kontrolliLiikumisPõrget();
-
-        if (Klahvihaldur.klahv_alla) {
-            // kui klotsi küljed ei puuduta põhja, siis lubatakse klotisl allapoole liikuda
-            if (põhjaPõrge == false) {
-                a[0].y += Plokk.plokiSuurus;
-                a[1].y += Plokk.plokiSuurus;
-                a[2].y += Plokk.plokiSuurus;
-                a[3].y += Plokk.plokiSuurus;
-
-                // pärast allapoole liikumist luger taasseatakse
-                langemisLuger = 0;
+        // Liikumine
+        if (!põhjaPõrge) {
+            // Alla
+            if ((mängija1 && Klahvihaldur.klahv_alla) || (!mängija1 && Klahvihaldur.klahv_alla2)) {
+                liiguAlla();
+                if (mängija1) Klahvihaldur.klahv_alla = false;
+                else Klahvihaldur.klahv_alla2 = false;
             }
-            Klahvihaldur.klahv_alla = false;
+
+            // Vasakule
+            if ((mängija1 && Klahvihaldur.klahv_vasakule && !vasakPõrge) ||
+                    (!mängija1 && Klahvihaldur.klahv_vasakule2 && !vasakPõrge)) {
+                liiguVasakule();
+                if (mängija1) Klahvihaldur.klahv_vasakule = false;
+                else Klahvihaldur.klahv_vasakule2 = false;
+            }
+
+            // Paremale
+            if ((mängija1 && Klahvihaldur.klahv_paremale && !paremPõrge) ||
+                    (!mängija1 && Klahvihaldur.klahv_paremale2 && !paremPõrge)) {
+                liiguParemale();
+                if (mängija1) Klahvihaldur.klahv_paremale = false;
+                else Klahvihaldur.klahv_paremale2 = false;
+            }
         }
 
-        if (Klahvihaldur.klahv_vasakule) {
-            if (vasakPõrge == false) {
-                a[0].x -= Plokk.plokiSuurus;
-                a[1].x -= Plokk.plokiSuurus;
-                a[2].x -= Plokk.plokiSuurus;
-                a[3].x -= Plokk.plokiSuurus;
-            }
-            Klahvihaldur.klahv_vasakule = false;
-        }
-
-        if (Klahvihaldur.klahv_paremale) {
-            if (paremPõrge == false) {
-                a[0].x += Plokk.plokiSuurus;
-                a[1].x += Plokk.plokiSuurus;
-                a[2].x += Plokk.plokiSuurus;
-                a[3].x += Plokk.plokiSuurus;
-            }
-            Klahvihaldur.klahv_paremale = false;
-        }
-
+        // Automaatne kukkumine
         if (põhjaPõrge) { // põhjapõrke korral klots deaktiveeritakse ning automaatne allapoole liikumine peatub
             mitteaktiivne = true;
         } else {
@@ -219,21 +151,51 @@ public class Klotsid {
         }
     }
 
+    private void pööra() {
+        switch (suund) {
+            case 1: getSuund2(); break;
+            case 2: getSuund3(); break;
+            case 3: getSuund4(); break;
+            case 4: getSuund1(); break;
+        }
+    }
+
+    private void liiguAlla() {
+        for (Plokk plokk : a) {
+            plokk.y += Plokk.plokiSuurus;
+        }
+    }
+
+    private void liiguVasakule() {
+        for (Plokk plokk : a) {
+            plokk.x -= Plokk.plokiSuurus;
+        }
+    }
+
+    private void liiguParemale() {
+        for (Plokk plokk : a) {
+            plokk.x += Plokk.plokiSuurus;
+        }
+    }
+
     private void mitteaktiivne() {
         mitteaktiivseteLuger++;
 
         // klots deaktiveeritakse peale 45 raami möödumist
         if (mitteaktiivseteLuger == 45) {
             mitteaktiivseteLuger = 0;
-            kontrolliLiikumisPõrget(); // kontrollitakse, kas põhi on endiselt kokkupuutes
+            // kontrollitakse, kas põhi on endiselt kokkupuutes
             // deaktiveerimisluger läheb käima alates põhjakokkupuute hetkest
             if (põhjaPõrge) {
                 aktiivne = false;
+                vasakPõrge = false;
+                paremPõrge = false;
+                põhjaPõrge = false;
             }
         }
     }
 
-    public void kuva(GraphicsContext gc) {
+    public void kuva(GraphicsContext gc){
         int margin = 2;
         gc.setFill(a[0].värv);
         gc.fillRect(a[0].x, a[0].y, Plokk.plokiSuurus - (margin * 2), Plokk.plokiSuurus - (margin * 2));
@@ -241,5 +203,4 @@ public class Klotsid {
         gc.fillRect(a[2].x, a[2].y, Plokk.plokiSuurus - (margin * 2), Plokk.plokiSuurus - (margin * 2));
         gc.fillRect(a[3].x, a[3].y, Plokk.plokiSuurus - (margin * 2), Plokk.plokiSuurus - (margin * 2));
     }
-
 }
