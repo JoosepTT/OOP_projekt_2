@@ -1,14 +1,18 @@
+
 package com.example.oop_rt2;
 
 import javafx.scene.paint.Color;
 
 public class Kujund_7 extends Klotsid {
 
-    public Kujund_7() {
+    public Kujund_7(boolean isPlayer1) {
+        super(isPlayer1);
         looKujund(Color.GREEN);
     }
 
     public void määraXY(int x, int y) {
+        aktiivne = true;
+        mitteaktiivne = false;
         // o
         // o o
         //   o
