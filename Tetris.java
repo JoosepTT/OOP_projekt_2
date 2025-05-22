@@ -12,22 +12,14 @@ public class Tetris extends Application {
 
     @Override
     public void start(Stage peaLava) {
-        Mängupaneel mängupaneel = new Mängupaneel();
-        mängupaneel.setPeaLava(peaLava);
-
-        Scene stseen = new Scene(mängupaneel, Mängupaneel.laius, Mängupaneel.kõrgus);
-
-        Klahvihaldur kh = new Klahvihaldur();
-        stseen.setOnKeyPressed(kh);
-        stseen.setOnKeyReleased(kh);
+        Menüüpaneel menüüpaneel = new Menüüpaneel(peaLava);
+        Scene menuScene = new Scene(menüüpaneel, 300, 400);
 
         peaLava.setTitle("Tetris");
-        peaLava.setScene(stseen);
+        peaLava.setScene(menuScene);
         peaLava.setResizable(false);
         peaLava.centerOnScreen();
         peaLava.show();
 
-        // Vajaliku fookuse määramine, et klahvid töötaksid
-        mängupaneel.requestFocus();
     }
 }

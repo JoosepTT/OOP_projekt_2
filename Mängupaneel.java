@@ -19,11 +19,17 @@ public class Mängupaneel extends Pane implements Runnable {
     private Mänguhaldur mh2;
     private Stage peaLava;
 
+    private String player1Name;
+    private String player2Name;
+
     public void setPeaLava(Stage lava) {
         this.peaLava = lava;
     }
 
-    public Mängupaneel() {
+    public Mängupaneel(String player1Name, String player2Name) {
+        this.player1Name = player1Name;
+        this.player2Name = player2Name;
+
         // paneeli seaded
         setPrefSize(laius, kõrgus);
         setStyle("-fx-background-color: black;");
@@ -65,6 +71,11 @@ public class Mängupaneel extends Pane implements Runnable {
                 delta--;
             }
         }
+
+        if (mh1.kasMängOnLäbi || mh2.kasMängOnLäbi) {
+            Menüüpaneel.salvestaSkoor(player1Name, mh1.skoor);
+            Menüüpaneel.salvestaSkoor(player2Name, mh2.skoor);
+        }
     }
 
     // mänguinfo uudendatakse siis, kui mäng pole pausil
@@ -97,7 +108,7 @@ public class Mängupaneel extends Pane implements Runnable {
         // Kirjeldused
         gc.setFill(Color.WHITE);
         gc.setFont(new Font(20));
-        gc.fillText("Mängija 1 (WASD)", laius / 4 - 80, 30);
-        gc.fillText("Mängija 2 (Nooled)", 3 * laius / 4 - 100, 30);
+        gc.fillText(player1Name, laius / 4 - 80, 30);
+        gc.fillText(player2Name, 3 * laius / 4 - 100, 30);
     }
 }

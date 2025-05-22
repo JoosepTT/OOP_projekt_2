@@ -209,9 +209,9 @@ public class Mänguhaldur {
         int scoreX = mängija1 ? parem_x + 20 : abiX + 430;
         gc.setFill(Color.WHITE);
         gc.setFont(new Font(20));
-        gc.fillText("Player " + (mängija1 ? "1" : "2"), scoreX, ülemine_y + 30);
-        gc.fillText("Score: " + skoor, scoreX, ülemine_y + 60);
-        gc.fillText("Lines: " + jooni, scoreX, ülemine_y + 90);
+        gc.fillText("Mängija " + (mängija1 ? "1" : "2"), scoreX, ülemine_y + 30);
+        gc.fillText("Skoor: " + skoor, scoreX, ülemine_y + 60);
+        gc.fillText("Ridu: " + jooni, scoreX, ülemine_y + 90);
 
         // mängu lõpetamine ja pausile panemine
         gc.setFill(Color.YELLOW);
