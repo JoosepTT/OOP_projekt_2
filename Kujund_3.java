@@ -4,11 +4,14 @@ import javafx.scene.paint.Color;
 
 public class Kujund_3 extends Klotsid {
 
-    public Kujund_3() {
+    public Kujund_3(boolean isPlayer1) {
+        super(isPlayer1);
         looKujund(Color.MAGENTA);
     }
 
     public void määraXY(int x, int y) {
+        aktiivne = true;
+        mitteaktiivne = false;
         //   o
         // o o o
         //
