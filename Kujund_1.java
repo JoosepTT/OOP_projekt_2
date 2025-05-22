@@ -4,11 +4,14 @@ import javafx.scene.paint.Color;
 
 public class Kujund_1 extends Klotsid {
 
-    public Kujund_1() {
+    public Kujund_1(boolean isPlayer1) {
+        super(isPlayer1);
         looKujund(Color.ORANGE);
     }
 
     public void määraXY(int x, int y) {
+        aktiivne = true;
+        mitteaktiivne = false;
         // o
         // o <- pöördepunkt ehk koordinaatide algus
         // o o
