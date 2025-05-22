@@ -1,4 +1,4 @@
-package com.example.oop_rt2;
+package oop2;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -12,14 +12,22 @@ public class Tetris extends Application {
 
     @Override
     public void start(Stage peaLava) {
-        Menüüpaneel menüüpaneel = new Menüüpaneel(peaLava);
-        Scene menuScene = new Scene(menüüpaneel, 300, 400);
+        Mängupaneel mängupaneel = new Mängupaneel();
+        mängupaneel.setPeaLava(peaLava);
+
+        Scene stseen = new Scene(mängupaneel, Mängupaneel.laius, Mängupaneel.kõrgus);
+
+        Klahvihaldur kh = new Klahvihaldur();
+        stseen.setOnKeyPressed(kh);
+        stseen.setOnKeyReleased(kh);
 
         peaLava.setTitle("Tetris");
-        peaLava.setScene(menuScene);
+        peaLava.setScene(stseen);
         peaLava.setResizable(false);
         peaLava.centerOnScreen();
         peaLava.show();
 
+        // Vajaliku fookuse määramine, et klahvid töötaksid
+        mängupaneel.requestFocus();
     }
 }

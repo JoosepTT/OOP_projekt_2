@@ -1,4 +1,4 @@
-package com.example.oop_rt2;
+package oop2;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -37,19 +37,35 @@ public class Mänguhaldur {
     public ArrayList<Plokk> staatilisedPlokid;
     public static int langemisIntervall = 30;
     public boolean kasMängOnLäbi;
+    private Mänguhaldur vastane;
 
     // skoorid
     int tase = 1;
     int jooni;
     int skoor;
 
+    public int getSkoor() {
+        return skoor; // eeldusel, et sul on skoor muutujana klassis olemas
+    }
+
+    public void setVastane(Mänguhaldur vastane) {
+        this.vastane = vastane;
+    }
+
     public Mänguhaldur(int abiX, boolean mängija1) {
         this.mängija1 = mängija1;
-        this.abiX = abiX;
         this.staatilisedPlokid = new ArrayList<>();
+
+        if (abiX == 0) {
+            this.abiX = abiX;
+            vasak_x = 50;
+            parem_x = vasak_x + laius;
+        } else {
+            this.abiX = abiX;
+            vasak_x = abiX + 50;
+            parem_x = vasak_x + laius;
+        }
         // mänguala positsioon
-        vasak_x = abiX + 50;
-        parem_x = vasak_x + laius;
         ülemine_y = 50;
         alumine_y = ülemine_y + kõrgus;
 
@@ -58,10 +74,14 @@ public class Mänguhaldur {
         klotsiAlgus_y = ülemine_y + Plokk.plokiSuurus;
 
         // järgmise klotsi eelvaade
-        if (mängija1) {
+        if (abiX == 0) {
             järgmiseKlotsi_x = parem_x + 50;
-        } else {
-            järgmiseKlotsi_x = abiX + 460;
+        } else { // kui on duellirežiim
+            if (mängija1) {
+                järgmiseKlotsi_x = parem_x + 50;
+            } else {
+                järgmiseKlotsi_x = abiX + 460;
+            }
         }
         järgmiseKlotsi_y = ülemine_y + 150;
 
@@ -180,8 +200,38 @@ public class Mänguhaldur {
         if (joonteArv > 0) {
             int jooneSkoor = 10 * tase;
             skoor += jooneSkoor * joonteArv;
+
+            if (vastane != null) {
+                vastane.lisaSegavRida();
+            }
         }
     }
+
+    public void lisaSegavRida() {
+        // Tõsta kõik plokid ühe võrra üles
+        for (Plokk plokk : staatilisedPlokid) {
+            plokk.y -= Plokk.plokiSuurus;
+            // kui plokk liigub üleval äärest välja, siis on mäng läbi
+            if (plokk.y < ülemine_y) {
+                kasMängOnLäbi = true;
+            }
+        }
+
+        // Loo uus juhuslik alumine rida
+        int startX = vasak_x;
+        int y = alumine_y - Plokk.plokiSuurus;
+        Random rnd = new Random();
+
+        for (int i = 0; i < 12; i++) {
+            if (rnd.nextBoolean()) { // 50% tõenäosus
+                Plokk uusPlokk = new Plokk(Color.GRAY);
+                uusPlokk.x = startX + i * Plokk.plokiSuurus;
+                uusPlokk.y = y;
+                staatilisedPlokid.add(uusPlokk);
+            }
+        }
+    }
+
 
     public void joonista(GraphicsContext gc) {
         // mänguala kuvamine

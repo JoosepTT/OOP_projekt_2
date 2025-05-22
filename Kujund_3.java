@@ -1,4 +1,4 @@
-package com.example.oop_rt2;
+package oop2;
 
 import javafx.scene.paint.Color;
 

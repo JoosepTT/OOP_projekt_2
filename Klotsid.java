@@ -1,4 +1,4 @@
-package com.example.oop_rt2;
+package oop2;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -184,7 +184,7 @@ public class Klotsid {
         // klots deaktiveeritakse peale 45 raami möödumist
         if (mitteaktiivseteLuger == 45) {
             mitteaktiivseteLuger = 0;
-             // kontrollitakse, kas põhi on endiselt kokkupuutes
+            // kontrollitakse, kas põhi on endiselt kokkupuutes
             // deaktiveerimisluger läheb käima alates põhjakokkupuute hetkest
             if (põhjaPõrge) {
                 aktiivne = false;

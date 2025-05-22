@@ -1,4 +1,4 @@
-package com.example.oop_rt2;
+package oop2;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
