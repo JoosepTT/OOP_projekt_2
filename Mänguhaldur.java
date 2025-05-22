@@ -75,15 +75,15 @@ public class Mänguhaldur {
 
         // järgmise klotsi eelvaade
         if (abiX == 0) {
-            järgmiseKlotsi_x = parem_x + 50;
+            järgmiseKlotsi_x = parem_x + 60;
         } else { // kui on duellirežiim
             if (mängija1) {
-                järgmiseKlotsi_x = parem_x + 50;
+                järgmiseKlotsi_x = parem_x + 60;
             } else {
-                järgmiseKlotsi_x = abiX + 460;
+                järgmiseKlotsi_x = abiX + 470;
             }
         }
-        järgmiseKlotsi_y = ülemine_y + 150;
+        järgmiseKlotsi_y = ülemine_y + 180;
 
         // järgmise klotsi seadistamine
         praeguneKlots = valiKlots();
@@ -246,8 +246,8 @@ public class Mänguhaldur {
 
         // järgmisena tuleva klotsi kuvamine
         gc.setStroke(Color.WHITE);
-        gc.strokeRect(järgmiseKlotsi_x - 37, järgmiseKlotsi_y - 37,
-                Plokk.plokiSuurus * 4 - 20, Plokk.plokiSuurus * 4 - 20);
+        gc.strokeRect(järgmiseKlotsi_x - 45, järgmiseKlotsi_y - 60,
+                Plokk.plokiSuurus * 5, Plokk.plokiSuurus * 5);
         järgmineKlots.kuva(gc);
 
         // staatiliste klotside kuvamine
@@ -264,7 +264,7 @@ public class Mänguhaldur {
         gc.fillText("Ridu: " + jooni, scoreX, ülemine_y + 90);
 
         // mängu lõpetamine ja pausile panemine
-        gc.setFill(Color.YELLOW);
+        gc.setFill(Color.ORANGE);
         gc.setFont(Font.font("Arial", 50));
         int x = vasak_x + 70;
         int y = ülemine_y + 320;

@@ -121,8 +121,12 @@ public class Mängupaneel extends Pane implements Runnable {
         if (mh2 != null) {
             gc.setFill(Color.WHITE);
             gc.setFont(new Font(20));
-            gc.fillText(Menüü.mängija_1_nimi, laius / 4 - 80, 30);
-            gc.fillText(Menüü.mängija_2_nimi, 3 * laius / 4 - 100, 30);
+            gc.fillText(Tetris.mängija_1_nimi, laius / 4 - 80, 30);
+            gc.fillText(Tetris.mängija_2_nimi, 3 * laius / 4 - 100, 30);
+        } else {
+            gc.setFill(Color.WHITE);
+            gc.setFont(new Font(20));
+            gc.fillText(Tetris.mängija_1_nimi, laius / 2, 30);
         }
     }
 
@@ -136,13 +140,13 @@ public class Mängupaneel extends Pane implements Runnable {
 
         if (mängijaid == 1) {
             int mängijaSkoor = mh1.getSkoor();
-            Menüü.uuendaSkoori(Menüü.mängija_1_nimi, mängijaSkoor);
+            Tetris.uuendaSkoori(Tetris.mängija_1_nimi, mängijaSkoor);
             lõppTekst = new Label("Mäng on lõppenud!\nSinu skoor: " + mängijaSkoor);
         } else {
             int mangija1Skoor = mh1.getSkoor();
             int mangija2Skoor = mh2.getSkoor();
-            Menüü.uuendaSkoori(Menüü.mängija_1_nimi, mangija1Skoor);
-            Menüü.uuendaSkoori(Menüü.mängija_2_nimi, mangija2Skoor);
+            Tetris.uuendaSkoori(Tetris.mängija_1_nimi, mangija1Skoor);
+            Tetris.uuendaSkoori(Tetris.mängija_2_nimi, mangija2Skoor);
             lõppTekst = new Label("Mäng on lõppenud!");
         }
 
@@ -152,7 +156,7 @@ public class Mängupaneel extends Pane implements Runnable {
         Button tagasiBtn = new Button("Naase menüüsse");
         tagasiBtn.setOnAction(e -> {
             try {
-                new Menüü().start(peaLava);
+                new Tetris().start(peaLava);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

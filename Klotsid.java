@@ -152,6 +152,7 @@ public class Klotsid {
     }
 
     private void pööra() {
+        // klotsi pööramine
         switch (suund) {
             case 1: getSuund2(); break;
             case 2: getSuund3(); break;
