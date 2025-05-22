@@ -106,47 +106,51 @@ public class Menüü extends Application {
         primaryStage.setScene(nimiScene);
 
         alustaBtn.setOnAction(e -> {
-            String mangijaNimi = nimiSisend.getText().trim().toLowerCase();
+            String sisestatudNimi = nimiSisend.getText().trim();
 
-            if (mangijaNimi.isEmpty()) {
-                tagasiside.setText("Palun sisesta nimi:");
-                return;
+            try {
+                if (sisestatudNimi.isEmpty()) {
+                    throw new ViganeNimiErind("Palun sisesta nimi.");
+                }
+
+                kontrolliNimeFormaati(sisestatudNimi);
+
+                String mangijaNimi = sisestatudNimi.toLowerCase(); // formaalselt korrektne
+                int korgeimSkoor = skoorid.getOrDefault(mangijaNimi, 0);
+                Mängupaneel.mangijaNimi = mangijaNimi;
+
+                if (skoorid.containsKey(mangijaNimi)) {
+                    tagasiside.setText("Tere tulemast tagasi, " + mangijaNimi + "! Sinu kõrgeim skoor on " + korgeimSkoor + ".");
+                } else {
+                    tagasiside.setText("Tere tulemast, " + mangijaNimi + "! Alustame mängu...");
+                }
+
+                // Ootame 2 sekundit ja alustame mängu
+                PauseTransition paus = new PauseTransition(Duration.seconds(2));
+                paus.setOnFinished(ev -> {
+                    Mängupaneel.mängijaid = 1;
+                    Mängupaneel mängupaneel = new Mängupaneel();
+                    mängupaneel.setPeaLava(primaryStage);
+
+                    Scene stseen = new Scene(mängupaneel, Mängupaneel.laius, Mängupaneel.kõrgus);
+
+                    Klahvihaldur kh = new Klahvihaldur();
+                    stseen.setOnKeyPressed(kh);
+                    stseen.setOnKeyReleased(kh);
+
+                    primaryStage.setTitle("Tetris – Üksikmäng");
+                    primaryStage.setScene(stseen);
+                    primaryStage.setResizable(false);
+                    primaryStage.centerOnScreen();
+                    primaryStage.show();
+
+                    mängupaneel.requestFocus();
+                });
+                paus.play();
+
+            } catch (ViganeNimiErind ex) {
+                tagasiside.setText(ex.getMessage());
             }
-
-            int korgeimSkoor = skoorid.getOrDefault(mangijaNimi, 0);
-
-            Mängupaneel.mangijaNimi = mangijaNimi;
-
-            if (skoorid.containsKey(mangijaNimi.toLowerCase())) {
-                tagasiside.setText("Tere tulemast tagasi, " + mangijaNimi + "! Sinu kõrgeim skoor on " + korgeimSkoor + ".");
-            } else {
-                tagasiside.setText("Tere tulemast, " + mangijaNimi + "! Alustame mängu...");
-            }
-
-            // Ootame 2 sekundit ja alustame mängu
-            PauseTransition paus = new PauseTransition(Duration.seconds(2));
-            paus.setOnFinished(ev -> {
-                Mängupaneel.mängijaid = 1;
-                Mängupaneel mängupaneel = new Mängupaneel();
-                mängupaneel.setPeaLava(primaryStage);
-
-                Scene stseen = new Scene(mängupaneel, Mängupaneel.laius, Mängupaneel.kõrgus);
-
-                // Lisa klahvihaldur
-                Klahvihaldur kh = new Klahvihaldur();
-                stseen.setOnKeyPressed(kh);
-                stseen.setOnKeyReleased(kh);
-
-                primaryStage.setTitle("Tetris – Üksikmäng");
-                primaryStage.setScene(stseen);
-                primaryStage.setResizable(false);
-                primaryStage.centerOnScreen();
-                primaryStage.show();
-
-                mängupaneel.requestFocus();
-            });
-            paus.play();
-
         });
     }
 
@@ -220,6 +224,24 @@ public class Menüü extends Application {
     protected static void uuendaSkoori(String mangijaNimi, int uusSkoor) {
         int kõrgemSkoor = Math.max(skoorid.getOrDefault(mangijaNimi, 0), uusSkoor); // kui uus skoor on suurem kui praegune, siis uuendatakse mängija skoori
         skoorid.put(mangijaNimi, kõrgemSkoor);
+    }
+
+    private void kontrolliNimeFormaati(String nimi) throws ViganeNimiErind {
+        if (nimi.length() > 20) {
+            throw new ViganeNimiErind("Nimi on liiga pikk (max 20 tähemärki).");
+        }
+
+        if (!nimi.matches("[a-z\\-]+")) {
+            // Kui sisaldab suuri tähti
+            if (nimi.matches(".*[A-Z].*")) {
+                throw new ViganeNimiErind("Nimi võib sisaldada ainult väiketähti!");
+            }
+
+            // Kui sisaldab muid sümboleid peale sidekriipsu
+            if (!nimi.matches("[a-zA-Z\\-]+")) {
+                throw new ViganeNimiErind("Nimes ei tohi olla sümboleid, välja arvatud sidekriips!");
+            }
+        }
     }
 
 }
