@@ -6,7 +6,7 @@ import javafx.scene.shape.Rectangle;
 public class Plokk extends Rectangle {
 
     public int x, y;
-    public static final int plokiSuurus = 30; // üks ploll on 30 x 30 pikslit
+    public static final int plokiSuurus = 30; // üks plokk on 30 x 30 pikslit
     public Color värv;
 
     public Plokk(Color värv) {
