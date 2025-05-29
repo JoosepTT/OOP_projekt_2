@@ -37,6 +37,11 @@ public class Mänguhaldur {
     public ArrayList<Plokk> staatilisedPlokid;
     public static int langemisIntervall = 30;
     public boolean kasMängOnLäbi;
+
+    public void setVastane(Mänguhaldur vastane) {
+        this.vastane = vastane;
+    }
+
     private Mänguhaldur vastane;
 
     // skoorid
@@ -45,7 +50,6 @@ public class Mänguhaldur {
     int skoor;
 
     public int getSkoor() {
-        // eeldusel, et sul on skoor muutujana klassis olemas
         return skoor;
     }
 
