@@ -48,6 +48,9 @@ public class Mängupaneel extends Pane implements Runnable {
             mh1 = new Mänguhaldur(0, true); // Mängija 1 vasakul
             mh2 = new Mänguhaldur(laius / 2, false); // Mängija 2 paremal
 
+            mh1.setVastane(mh2);
+            mh2.setVastane(mh1);
+
             käivitaMäng();
         }
     }
